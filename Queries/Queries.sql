@@ -124,3 +124,37 @@ FROM current_emp as ce
 INNER JOIN dept_emp as de on (ce.emp_no = de.emp_no)
 INNER JOIN departments as d ON (de.dept_no = d.dept_no)
 WHERE d.dept_name IN ('Sales', 'Development');
+
+-- Find which departments have managers eligibile for retirement 
+SELECT
+	rt.emp_no,
+	rt.first_name,
+	rt.last_name,
+	rt.title,
+	d.dept_name
+FROM retire_by_title_unique as rt
+INNER JOIN dept_emp AS de ON (rt.emp_no = de.emp_no)
+INNER JOIN departments AS d ON (de.dept_no = d.dept_no)
+WHERE title = 'Manager';
+
+-- Get number of people retiring by department
+SELECT
+	d.dept_no,
+	d.dept_name,
+	COUNT(rt.emp_no) AS Num_Retiring
+FROM retire_by_title_unique as rt
+INNER JOIN dept_emp AS de ON (de.emp_no = rt.emp_no)
+INNER JOIN departments AS d ON (de.dept_no = d.dept_no)
+WHERE de.to_date = '9999-01-01'
+GROUP BY 1;
+
+-- Get number of people eligible for mentorship by department
+SELECT
+	d.dept_no,
+	d.dept_name,
+	COUNT(me.emp_no) AS Num_Mentor_Eligible
+FROM mentorship_eligibility as me
+INNER JOIN dept_emp AS de ON (de.emp_no = me.emp_no)
+INNER JOIN departments AS d ON (de.dept_no = d.dept_no)
+WHERE de.to_date = '9999-01-01'
+GROUP BY 1;
